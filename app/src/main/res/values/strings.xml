@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BookDemo2</string>
+    <string name="question_1">Are you OK?</string>
+    <string name="correct_btn">正确</string>
+    <string name="incorrect_btn">错误</string>
+    <string name="correct_msg">回答正确</string>
+    <string name="incorrect_msg">回答错误</string>
+</resources>
