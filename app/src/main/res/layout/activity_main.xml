@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/question_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/question_1"
         android:padding="24dp"/>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -19,11 +19,19 @@
             android:id="@+id/true_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/correct_btn"/>
+            android:text="@string/true_btn"/>
         <Button
             android:id="@+id/false_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/incorrect_btn"/>
+            android:text="@string/false_btn"/>
     </LinearLayout>
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next_btn"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="4dp"
+        android:drawableRight="@drawable/arrow_right" />
 </LinearLayout>
