@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private Button mTrueBtn;
     private Button mFalseBtn;
-    private Button mPrevBtn;
-    private Button mNextBtn;
+    private ImageButton mPrevBtn;
+    private ImageButton mNextBtn;
     private TextView mQuestionTextView;
     private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_australia, true),

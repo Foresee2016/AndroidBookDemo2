@@ -32,21 +32,17 @@
         android:gravity="center"
         android:orientation="horizontal"
         style="?android:attr/buttonBarButtonStyle">
-        <Button
+        <ImageButton
             android:id="@+id/prev_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/prev_btn"
-            android:drawableStart="@drawable/arrow_left"
-            android:drawablePadding="4dp"
-            android:drawableLeft="@drawable/arrow_left" />
-        <Button
+            android:src="@drawable/arrow_left"
+            android:contentDescription="@string/prev_btn"/>
+        <ImageButton
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next_btn"
-            android:drawableEnd="@drawable/arrow_right"
-            android:drawablePadding="4dp"
-            android:drawableRight="@drawable/arrow_right" />
+            android:src="@drawable/arrow_right"
+            android:contentDescription="@string/next_btn"/>
     </LinearLayout>
 </LinearLayout>
