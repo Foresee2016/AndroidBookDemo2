@@ -1,5 +1,6 @@
 package org.foresee.bookdemo2;
 
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG="MainActivity";
+    private static final String KEY_INDEX="index";
     private Button mTrueBtn;
     private Button mFalseBtn;
     private ImageButton mPrevBtn;
@@ -32,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState!=null){
+            mCurrentIndex=savedInstanceState.getInt(KEY_INDEX, 0);
+        }
+
         mQuestionTextView = findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState");
+        outState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
     @Override
