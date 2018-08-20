@@ -1,19 +1,22 @@
 package org.foresee.bookdemo2;
 
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG="MainActivity";
-    private static final String KEY_INDEX="index";
+    private static final String TAG = "MainActivity";
+    private static final String KEY_INDEX = "index";
+    private static final String KEY_RESULT = "result";
+    private static final String KEY_COUNTER = "count";
     private Button mTrueBtn;
     private Button mFalseBtn;
     private ImageButton mPrevBtn;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_americas, true),
             new Question(R.string.question_asia, true)
     };
+    private int[] mResult = new int[mQuestionBank.length]; // 记录回答结果，-1未答，0答错，1答对
+    private int mCounter = 0;
     private int mCurrentIndex = 0;
 
     @Override
@@ -35,19 +40,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState!=null){
-            mCurrentIndex=savedInstanceState.getInt(KEY_INDEX, 0);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mResult = savedInstanceState.getIntArray(KEY_RESULT);
+            mCounter = savedInstanceState.getInt(KEY_COUNTER);
+        } else {
+            Arrays.fill(mResult, -1);
         }
 
         mQuestionTextView = findViewById(R.id.question_text_view);
-        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() { // 单击题目文本时下一题
             @Override
             public void onClick(View view) {
-                mCurrentIndex=(mCurrentIndex+1)%mQuestionBank.length;
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
             }
         });
-        updateQuestion();
         mTrueBtn = findViewById(R.id.true_btn);
         mTrueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 checkAnswer(false);
             }
         });
-        mPrevBtn=findViewById(R.id.prev_btn);
+        mPrevBtn = findViewById(R.id.prev_btn);
         mPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mCurrentIndex--;
-                if(mCurrentIndex<0){
-                    mCurrentIndex=mQuestionBank.length-1;
+                if (mCurrentIndex < 0) {
+                    mCurrentIndex = mQuestionBank.length - 1;
                 }
                 updateQuestion();
             }
@@ -81,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+        updateQuestion();
     }
 
     @Override
@@ -88,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstanceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putIntArray(KEY_RESULT, mResult);
+        outState.putInt(KEY_COUNTER, mCounter);
     }
 
     @Override
@@ -117,16 +128,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy() called");
+        Log.d(TAG, "onDestroy() called");
     }
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        setAnswerBtnVisible(mResult[mCurrentIndex] == -1 ? View.VISIBLE : View.INVISIBLE);
     }
-    private void checkAnswer(boolean userPressedTrue){
+
+    private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        int messageResId= userPressedTrue == answerIsTrue ? R.string.correct_toast : R.string.incorrect_toast;
+        mResult[mCurrentIndex] = answerIsTrue ? 0 : 1;
+        mCounter++;
+        setAnswerBtnVisible(View.INVISIBLE);
+        if (mCounter == mQuestionBank.length) {
+            int score = 0;
+            for (int res : mResult) {
+                score += res;
+            }
+            double rate = (double) score / mResult.length;
+            String percent = String.format(Locale.getDefault(), "已全部作答，回答正确率：%.2f", rate * 100);
+            Toast.makeText(this, percent, Toast.LENGTH_LONG).show();
+            return;
+        }
+        int messageResId = userPressedTrue == answerIsTrue ? R.string.correct_toast : R.string.incorrect_toast;
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+    private void setAnswerBtnVisible(int visible){
+        mTrueBtn.setVisibility(visible);
+        mFalseBtn.setVisibility(visible);
     }
 }
